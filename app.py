@@ -8,10 +8,23 @@ from marshmallow import fields
 from marshmallow_sqlalchemy import ModelSchema
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+from dotenv import load_dotenv
+
+load_dotenv()
+# Get environment variables
+DB_TYPE = str(os.getenv('DB_TYPE'))
+DB_HOST = str(os.getenv('DB_HOST'))
+DB_USER = str(os.getenv('DB_USER'))
+DB_PASS = str(os.getenv('DB_PASS'))
+DB_NAME = str(os.getenv('DB_NAME'))
+
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://bmacharia:12qwaszxasqw12@localhost:3306/SecureSession'
-app.config['SECRET_KEY'] = 'Begin at the beginning, the King said, very gravely, and go on till you come to the end: then stop. -  Lewis Carroll, Alice in Wonderland'
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_TYPE+'+pymysql://'+DB_USER+':'+DB_PASS+'@'+DB_HOST+':3306/'+DB_NAME
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://bmacharia:12qwaszxasqw12@localhost:3306/SecureSession'
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 db = SQLAlchemy(app)
@@ -26,7 +39,7 @@ class User(db.Model):
     fullname = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     slug = db.Column(db.String(255), unique=True)
-    access_token = db.Column(db.String())
+    access_token = db.Column(db.String(500), nullable=True)
 
     # Hash password
     def hash_password(self, password):
