@@ -18,8 +18,15 @@ $ python3 app.py
 Create a `.gitignore` file and add the path to your `.env` file to prevent it from being committed and uploaded into github while pushing your code.
 ```sh
 $ echo ".env" > .gitignore
-$ echo "venv/*" >> .gitignore
 $ git add .gitignore
 $ git commit -m "add .gitignore file to project"
 $ git push origin main
 ```
+If you already committed the .env file to your Git repository, then:-
+```sh
+$ git rm -r --cached .
+$ git add .
+$ git commit -m ".gitignore is now working"
+```
+
+> Make sure to commit all your important changes before running this, otherwise, you will lose any changes to other files.
